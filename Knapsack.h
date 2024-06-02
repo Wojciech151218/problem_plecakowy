@@ -29,8 +29,8 @@ public:
     Knapsack(std::string );
     void knapsackBruteForce(DecisionMode decisionMode);
 private:
-    void bruteForceUtilFront(std::vector<bool> itemIndexSet, int *result, std::vector<bool> *outcomeSet);
-    void bruteForceUtilBack(std::vector<bool> itemIndexSet, int *result, std::vector<bool> *outcomeSet);
+    void bruteForceUtilFront(std::vector<bool> itemIndexSet, int *result, std::vector<bool> *outcomeSet,int c,int v);
+    void bruteForceUtilBack(std::vector<bool> itemIndexSet, int *result, std::vector<bool> *outcomeSet, int c, int v);
     void printItems(std::vector<bool> itemsVector);
     bool decideBruteForceAlgorithm();
     void sortItems();

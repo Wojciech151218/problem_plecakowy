@@ -104,11 +104,12 @@ bool Knapsack::decideBruteForceAlgorithm() {
     return 2*capacityItemRatio > valueToWeightRatio;*/
 }
 
-void Knapsack::bruteForceUtilFront(std::vector<bool> itemIndexSet, int *result, std::vector<bool> *outcomeSet) {
-    Item currentBagProperties =  getPropertiesFromItemIndices(itemIndexSet);
-    if(currentBagProperties.weight<=capacity){
-        if(*result<currentBagProperties.value){
-            *result = currentBagProperties.value;
+void Knapsack::bruteForceUtilFront(std::vector<bool> itemIndexSet, int *result, std::vector<bool> *outcomeSet,
+                                   int currentCapacity,int currentValue) {
+
+    if(currentCapacity<=capacity){
+        if(*result<currentValue){
+            *result = currentValue;
             *outcomeSet = std::vector<bool>(itemIndexSet);
         }
         return ;
@@ -117,24 +118,27 @@ void Knapsack::bruteForceUtilFront(std::vector<bool> itemIndexSet, int *result, 
     for (int i = 0; i < itemIndexSet.size(); ++i) {
         if(!itemIndexSet[i]) continue;
         itemIndexSet[i] = false;
-        bruteForceUtilFront(itemIndexSet, result, outcomeSet);
+        bruteForceUtilFront(itemIndexSet, result, outcomeSet,
+                            currentCapacity-items[i].weight,currentValue-items[i].value);
         itemIndexSet[i] = true;
     }
 
 
 }
 
-void Knapsack::bruteForceUtilBack(std::vector<bool> itemIndexSet, int *result, std::vector<bool> *outcomeSet) {
-    Item currentBagProperties =  getPropertiesFromItemIndices(itemIndexSet);
-    if(currentBagProperties.weight>capacity) return;
+void
+Knapsack::bruteForceUtilBack(std::vector<bool> itemIndexSet, int *result, std::vector<bool> *outcomeSet,
+                             int currentCapacity,int currentValue) {
+    if(currentCapacity>capacity) return;
 
     for (int i = 0; i < itemIndexSet.size(); ++i) {
         if(itemIndexSet[i]) continue;
         itemIndexSet[i] = true;
-        bruteForceUtilBack(itemIndexSet, result, outcomeSet);
+        bruteForceUtilBack(itemIndexSet, result, outcomeSet,
+                           currentCapacity+items[i].weight, currentValue+items[i].value);
         itemIndexSet[i] = false;
-        if(*result<currentBagProperties.value){
-            *result = currentBagProperties.value;
+        if(*result<currentValue){
+            *result = currentValue;
             *outcomeSet = std::vector<bool>(itemIndexSet);
         }
     }
@@ -161,13 +165,15 @@ void Knapsack::knapsackBruteForce(DecisionMode decisionMode) {
     int result = 0;
 
     sortItems();
+    Item maxItemProperties = getPropertiesFromItemIndices(items);
     if(algorithmDecision) {
         printf("front mode\n");
-        bruteForceUtilFront(vector, &result, &outcomeVector);
+        bruteForceUtilFront(vector, &result, &outcomeVector,
+                            maxItemProperties.weight, maxItemProperties.value);
     }
     else {
         printf("back mode\n");
-        bruteForceUtilBack(vector, &result, &outcomeVector);
+        bruteForceUtilBack(vector, &result, &outcomeVector, 0, 0);
     }
 
     printItems(outcomeVector);
