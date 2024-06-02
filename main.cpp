@@ -39,11 +39,23 @@ int main() {
     std::vector<Item> items2 = itemGenerator(capacity);
     std::string filePath = R"(C:\Users\Wojciech\CLionProjects\problem_plecakowy\test1.txt)";
     Knapsack knapsack(filePath);
-    Knapsack knapsack1(filePath);
-    knapsack1.knapsackMatrix();
 
+    DecisionMode decisionMode;
+    char decisionSignature;
+    std::cin>> decisionSignature;
+    switch (decisionSignature) {
+        case 'f':
+            decisionMode = Front;
+            break;
+        case 'b':
+            decisionMode = Back;
+            break;
+        default:
+            decisionMode = Auto;
+            break;
+    }
     auto start = std::chrono::high_resolution_clock::now();
-    knapsack1.knapsackBruteForce();
+    knapsack.knapsackBruteForce(decisionMode);
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> duration = end - start;
     std::cout << "Time taken by function: " << duration.count() << " seconds" << std::endl;

@@ -8,7 +8,10 @@
 #include "set"
 #include "map"
 #include "bitset"
+#include "algorithm"
 
+
+enum DecisionMode{Auto,Front,Back};
 struct Item{
     int weight;
     int value;
@@ -17,14 +20,20 @@ struct Item{
 };
 class Knapsack {
 public:
+    int getValueFromItems(std::vector<bool> vector);
+    int getWeightFromItems(std::vector<bool> vector);
     Item getPropertiesFromItemIndices(std::vector<bool> vector);
     Item getPropertiesFromItemIndices(std::vector<Item> vector);
-    std::vector<std::vector<int>> knapsackMatrix();
-    explicit Knapsack(int capacity,std::vector<Item> &items) : capacity(capacity), items(items) {}
-    void knapsackBruteForce();
+    std::vector<Item> knapsackMatrix();
+    Knapsack(int capacity,std::vector<Item> &items) : capacity(capacity), items(items) {}
+    Knapsack(std::string );
+    void knapsackBruteForce(DecisionMode decisionMode);
 private:
-    void bruteForceUtil(std::vector<bool> itemIndexSet, int *result, std::vector<bool> *outcomeSet);
-    void printItems(std::vector<Item> itemsVector);
+    void bruteForceUtilFront(std::vector<bool> itemIndexSet, int *result, std::vector<bool> *outcomeSet);
+    void bruteForceUtilBack(std::vector<bool> itemIndexSet, int *result, std::vector<bool> *outcomeSet);
+    void printItems(std::vector<bool> itemsVector);
+    bool decideBruteForceAlgorithm();
+    void sortItems();
     int capacity;
     std::vector<Item> items;
 };
