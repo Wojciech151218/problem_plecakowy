@@ -17,10 +17,10 @@ int getRandomInteger(int a, int b) {
 std::vector<Item> itemGenerator(int capacity){
     std::vector<Item> result;
     int maxValue = 3*capacity/4;
-    int maxElements = capacity/2;
+    int maxElements = capacity;
     int minWeight = capacity/4;
     for (int i = 0; i < maxElements; ++i)
-        result.push_back({getRandomInteger(1,maxValue/2)+minWeight,getRandomInteger(1,maxValue)});
+        result.push_back({getRandomInteger(1,maxValue/3),getRandomInteger(1,maxValue)});
     return result;
 }
 
@@ -35,14 +35,18 @@ int main() {
     std::vector<Item> items1 = {
             {2,3},{3,7},{3,6}
     };
-    int capacity = 10;
+    int capacity = 12;
     std::vector<Item> items2 = itemGenerator(capacity);
-    Knapsack knapsack(capacity,items2);
-    Knapsack knapsack1(capacity,items2);
+    std::string filePath = R"(C:\Users\Wojciech\CLionProjects\problem_plecakowy\test1.txt)";
+    Knapsack knapsack(filePath);
+    Knapsack knapsack1(filePath);
     knapsack1.knapsackMatrix();
+
+    auto start = std::chrono::high_resolution_clock::now();
     knapsack1.knapsackBruteForce();
-
-
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> duration = end - start;
+    std::cout << "Time taken by function: " << duration.count() << " seconds" << std::endl;
 
     return 0;
 }

@@ -3,6 +3,21 @@
 //
 
 #include "Knapsack.h"
+#include <fstream>
+#include <string>
+#include <sstream>
+
+std::vector<std::string> splitStringBySpaces(const std::string& str) {
+    std::vector<std::string> result;
+    std::istringstream iss(str);
+    std::string word;
+    while (iss >> word) {
+        result.push_back(word);
+    }
+    return result;
+}
+
+
 Item Knapsack::getPropertiesFromItemIndices(std::vector<bool> vector){
     Item result={0,0};
     for (int i = 0; i < vector.size(); ++i) {
@@ -12,6 +27,24 @@ Item Knapsack::getPropertiesFromItemIndices(std::vector<bool> vector){
     }
     return result;
 }
+
+Knapsack::Knapsack(std::string filePath) {
+    std::ifstream inputFile(filePath);
+    std::string line;
+    bool isFirstLine = true;
+    while (std::getline(inputFile, line)) {
+        if(isFirstLine){
+            capacity = std::stoi(line);
+            isFirstLine = false;
+            continue;
+        }
+        std::vector<std::string> stringVector = splitStringBySpaces(line);
+        int weight = std::stoi(stringVector[0]);
+        int value = std::stoi(stringVector[1]);
+        items.push_back({weight,value});
+    }
+}
+
 std::vector<std::vector<int>> Knapsack::knapsackMatrix() {
     std::vector<std::vector<int>> V(items.size()+1,std::vector<int>(capacity+1,0));
 
@@ -28,10 +61,10 @@ std::vector<std::vector<int>> Knapsack::knapsackMatrix() {
     }
     int i = items.size();
     int j = capacity;
-    std::vector<Item> outcomeItems;
+    std::vector<bool> outcomeItems(items.size(), false);
     while(i> 0 && j> 0){
         if(V[i][j] != V[i-1][j]){
-            outcomeItems.push_back(items[i-1]);
+            outcomeItems[i-1] = true;
             j = j  - items[i-1].weight;
 
         }
@@ -67,24 +100,22 @@ void Knapsack::knapsackBruteForce() {
     std::vector<bool> outcomeVector;
     int result = 0;
     bruteForceUtil(vector, &result, &outcomeVector);
-    std::vector<Item> outcomeItems;
-    for (int i = 0; i < outcomeVector.size(); ++i) {
-        if (!outcomeVector[i]) continue;
-        outcomeItems.push_back(items[i]);
-    }
-    printItems(outcomeItems);
+
+    printItems(outcomeVector);
 }
 
 
-void Knapsack::printItems(std::vector<Item> itemsVector) {
+void Knapsack::printItems(std::vector<bool> itemsVector) {
     printf("----------------------------------\n");
     Item outcomeBagProperties = getPropertiesFromItemIndices(itemsVector);
-    printf("max capacity: %d\n",capacity);
+    printf("max capacity: %d\n", capacity);
     printf("capacity used: %d\n", outcomeBagProperties.weight);
-    printf("value: %d\n",outcomeBagProperties.value);
+    printf("value: %d\n", outcomeBagProperties.value);
     printf("items in the bag:\n");
-    for (int i = 0; i < itemsVector.size(); ++i)
-        printf("%d ", i+1);
+    for (int i = 0; i < itemsVector.size(); ++i) {
+        if(!itemsVector[i]) continue;
+        printf("%d ", i + 1);
+    }
     printf("\n----------------------------------\n");
 }
 
@@ -96,3 +127,4 @@ Item Knapsack::getPropertiesFromItemIndices(std::vector<Item> vector) {
     }
     return result;
 }
+
