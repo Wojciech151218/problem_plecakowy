@@ -28,15 +28,16 @@ std::vector<std::vector<int>> Knapsack::knapsackMatrix() {
     }
     int i = items.size();
     int j = capacity;
+    std::vector<Item> outcomeItems;
     while(i> 0 && j> 0){
         if(V[i][j] != V[i-1][j]){
-            printf("%d ",i);
+            outcomeItems.push_back(items[i-1]);
             j = j  - items[i-1].weight;
 
         }
         i--;
     }
-    printf("\n");
+    printItems(outcomeItems);
     return V;
 }
 void Knapsack::bruteForceUtil(std::vector<bool> itemIndexSet, int *result, std::vector<bool> *outcomeSet) {
@@ -62,17 +63,36 @@ void Knapsack::bruteForceUtil(std::vector<bool> itemIndexSet, int *result, std::
 void Knapsack::knapsackBruteForce() {
 
     std::vector<bool> vector(items.size(), true);
-    for (int i = 0; i < items.size(); ++i)
-        vector[i] = true;
+
     std::vector<bool> outcomeVector;
     int result = 0;
     bruteForceUtil(vector, &result, &outcomeVector);
+    std::vector<Item> outcomeItems;
     for (int i = 0; i < outcomeVector.size(); ++i) {
-        if(!outcomeVector[i]) continue;
-        printf("%d ", i+1);
+        if (!outcomeVector[i]) continue;
+        outcomeItems.push_back(items[i]);
     }
-    printf("\n");
-
+    printItems(outcomeItems);
 }
 
 
+void Knapsack::printItems(std::vector<Item> itemsVector) {
+    printf("----------------------------------\n");
+    Item outcomeBagProperties = getPropertiesFromItemIndices(itemsVector);
+    printf("max capacity: %d\n",capacity);
+    printf("capacity used: %d\n", outcomeBagProperties.weight);
+    printf("value: %d\n",outcomeBagProperties.value);
+    printf("items in the bag:\n");
+    for (int i = 0; i < itemsVector.size(); ++i)
+        printf("%d ", i+1);
+    printf("\n----------------------------------\n");
+}
+
+Item Knapsack::getPropertiesFromItemIndices(std::vector<Item> vector) {
+    Item result={0,0};
+    for (auto it:vector) {
+        result.weight += it.weight;
+        result.value += it.value;
+    }
+    return result;
+}

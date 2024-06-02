@@ -35,11 +35,11 @@ int main() {
     std::vector<Item> items1 = {
             {2,3},{3,7},{3,6}
     };
-    int capacity = 20;
+    int capacity = 10;
     std::vector<Item> items2 = itemGenerator(capacity);
-    Knapsack knapsack(9,items);
+    Knapsack knapsack(capacity,items2);
     Knapsack knapsack1(capacity,items2);
-    std::vector<std::vector<int>> bagMatrix = knapsack1.knapsackMatrix();
+    knapsack1.knapsackMatrix();
     knapsack1.knapsackBruteForce();
 
 

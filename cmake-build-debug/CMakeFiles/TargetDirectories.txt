@@ -1,0 +1,3 @@
+/home/wojciech/CLionProjects/problem_plecakowy/cmake-build-debug/CMakeFiles/problem_plecakowy.dir
+/home/wojciech/CLionProjects/problem_plecakowy/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/wojciech/CLionProjects/problem_plecakowy/cmake-build-debug/CMakeFiles/rebuild_cache.dir

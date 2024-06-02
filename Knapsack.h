@@ -18,14 +18,18 @@ struct Item{
 class Knapsack {
 public:
     Item getPropertiesFromItemIndices(std::vector<bool> vector);
+    Item getPropertiesFromItemIndices(std::vector<Item> vector);
     std::vector<std::vector<int>> knapsackMatrix();
     explicit Knapsack(int capacity,std::vector<Item> &items) : capacity(capacity), items(items) {}
     void knapsackBruteForce();
 private:
     void bruteForceUtil(std::vector<bool> itemIndexSet, int *result, std::vector<bool> *outcomeSet);
+    void printItems(std::vector<Item> itemsVector);
     int capacity;
     std::vector<Item> items;
 };
+
+
 
 
 #endif //PROBLEM_PLECAKOWY_KNAPSACK_H
